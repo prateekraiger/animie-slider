@@ -73,7 +73,7 @@ return (
             onMouseEnter={!isMobile ? () => focusPanel(i) : undefined}
             onClick={isMobile ? () => focusPanel(i) : undefined}
           >
-            <img src={`/spotlight/spotlight-${i + 1}.jpg`} />
+            <img src={`/spotlight/spotlight-${(i % 10) + 1}.png`} />
           </div>
         ))}
       </div>
