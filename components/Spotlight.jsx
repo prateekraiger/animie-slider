@@ -73,7 +73,7 @@ export default function Spotlight() {
     const [focusedPanel, setFocusedPanel] = useState(0);
    
     const panelCount = isMobile ? 9 : 18;
-    const expandedWidth = isMobile ? PANEL_WIDTH_EXPANDED_MOBILE:PANEL_WIDTH_EXPANDED;
+    const expandedWidth = PANEL_WIDTH_EXPANDED;
 
     useEffect(() => {
         const observer = new ResizeObserver(([entry]) => {
