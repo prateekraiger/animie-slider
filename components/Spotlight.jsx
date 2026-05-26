@@ -73,7 +73,6 @@ export default function Spotlight() {
     const [focusedPanel, setFocusedPanel] = useState(0);
    
     const panelCount = isMobile ? 9 : 18;
-    const expandedWidth = PANEL_WIDTH_EXPANDED;
 
     useEffect(() => {
         const observer = new ResizeObserver(([entry]) => {
@@ -88,22 +87,32 @@ export default function Spotlight() {
         setFocusedPanel(0);
     }, [panelCount]);
 
+    // Dynamic width calculation for perfect responsive behavior without overflow
+    const currentTrackWidth = trackWidth || 1200;
+    const expandedWidth = isMobile 
+        ? Math.min(260, currentTrackWidth * 0.55) 
+        : PANEL_WIDTH_EXPANDED;
+    
+    const collapsedWidth = isMobile
+        ? Math.max(12, (currentTrackWidth - expandedWidth - (panelCount - 1) * PANEL_GAP) / (panelCount - 1))
+        : PANEL_WIDTH_COLLAPSED;
+
     const getPanelPosition = useCallback(
         (panelIndex) => {
             const totalTrackWidth =
-                (panelCount - 1) * (PANEL_WIDTH_COLLAPSED + PANEL_GAP) +
+                (panelCount - 1) * (collapsedWidth + PANEL_GAP) +
                 expandedWidth;
             const offsetToCenter = (trackWidth - totalTrackWidth) / 2;
             let left = offsetToCenter;
             for (let i = 0; i < panelIndex; i++) {
-                const w = i === focusedPanel ? expandedWidth : PANEL_WIDTH_COLLAPSED;
+                const w = i === focusedPanel ? expandedWidth : collapsedWidth;
                 left += w + PANEL_GAP;
             }
             const width =
-                panelIndex === focusedPanel ? expandedWidth : PANEL_WIDTH_COLLAPSED;
+                panelIndex === focusedPanel ? expandedWidth : collapsedWidth;
             return { left, width };
         },
-        [focusedPanel, panelCount, expandedWidth, trackWidth]
+        [focusedPanel, panelCount, expandedWidth, collapsedWidth, trackWidth]
     );
 
     const focusPanel = useCallback((index) => {

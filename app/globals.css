@@ -219,12 +219,22 @@
     }
     .spotlight-panel {
         height: 360px;
+        border-radius: 12px;
     }
     .spotlight-panel img {
-        width: 250px;
+        width: 300px;
+    }
+    .spotlight-focus-indicator {
+        border-radius: 12px;
+        border-width: 2px;
+    }
+    .spotlight-focus-indicator::before, 
+    .spotlight-focus-indicator::after {
+        width: 2px;
     }
     .movie-title {
         font-size: 1rem;
+        margin-bottom: 3px;
     }
     .movie-year {
         font-size: 0.75rem;
