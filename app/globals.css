@@ -7,99 +7,226 @@
 .spotlight { 
     position: relative;
     height: 100svh;
-    width:100%;
-    background-color: #000;
+    width: 100%;
+    background-color: #050505;
     overflow: hidden;
+}
+
+/* Ambient Backdrop Reflection */
+.ambient-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(80px) brightness(0.2) saturate(1.4);
+    transition: background-image 1s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    pointer-events: none;
+    transform: scale(1.1); /* Prevents white edges from blur */
+}
+
+/* Spotlight Header */
+.spotlight-header {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    width: 90%;
+    max-width: 800px;
+    pointer-events: none;
+    font-family: var(--font-geist-sans), sans-serif;
+}
+
+.spotlight-header .subtitle {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 6px;
+    display: inline-block;
+    font-weight: 600;
+}
+
+.spotlight-header .title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff 30%, #ff85a2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.spotlight-header .header-divider {
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff4d6d, #ff85a2);
+    margin: 12px auto 0;
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(255, 77, 109, 0.6);
 }
 
 .spotlight-track {
      position: absolute;
-     top: 50%;
+     top: 55%;
      left: 50%; 
      width: 100%;
      transform: translate(-50%, -50%);
-    
+     z-index: 5;
 }
+
 .spotlight-panels {
     position: relative;
     width: 100%;
-    height: 400px;
-    
+    height: 480px;
 }
 
-.spotlight-panel{
+.spotlight-panel {
     position: absolute;
-    top:0;
-    height:100%;
+    top: 0;
+    height: 100%;
     overflow: hidden;
-    cursor:pointer;
-    transition: all 1s cubic-bezier(0.075,0.82,0.165,1);
-    will-change:left,width;
+    cursor: pointer;
+    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    will-change: left, width;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
 }
 
-.spotlight-panel img{
+.spotlight-panel img {
     position: absolute;
-    left:50%;
-    transform: translate(-50%);
+    left: 50%;
+    transform: translate(-50%) scale(1.01);
     width: 400px;
     height: 100%;
     object-fit: cover;
     pointer-events: none;
     user-select: none;
+    transition: transform 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+/* Subtle Zoom on Active Panel Hover/Focus */
+.spotlight-panel.focused img {
+    transform: translate(-50%) scale(1.06);
+}
 
-.spotlight-focus-indicator{
+/* Focus Indicator box around the active panel */
+.spotlight-focus-indicator {
     position: absolute;
     top: 0;
     height: 100%;
-    border: 3px solid #fff;
-    transition: all 1s cubic-bezier(0.075,0.82,0.165,1);
+    border: 3px solid #ff4d6d;
+    border-radius: 16px;
+    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
     will-change: left, width;
     pointer-events: none;
     z-index: 100;
+    box-shadow: 0 0 30px rgba(255, 77, 109, 0.4);
 }
 
 .spotlight-focus-indicator::before, 
 .spotlight-focus-indicator::after {
-content: "";
-position: absolute;
-left: 50%;
-transform: translateX(-50%);
-width: 3px;
-background: #fff;
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    background: linear-gradient(to top, #ff4d6d, transparent);
 }
 
 .spotlight-focus-indicator::before {
-bottom: 100%;
-height: 100svh;
+    bottom: 100%;
+    height: 100svh;
 }
 
 .spotlight-focus-indicator::after {
-top: 100%;
-height: 100svh;
+    top: 100%;
+    height: 100svh;
+    background: linear-gradient(to bottom, #ff4d6d, transparent);
+}
+
+/* Poster Title Overlay */
+.spotlight-panel-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 20px 25px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-family: var(--font-geist-sans), sans-serif;
+    z-index: 10;
+}
+
+.spotlight-panel-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.15s;
+}
+
+.movie-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.movie-year {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ff85a2;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    text-transform: uppercase;
 }
 
 @media (max-width:1000px) {
-    .spotlight-panels{
-        height: 250px;
+    .spotlight-header {
+        top: 25px;
     }
-
+    .spotlight-header .title {
+        font-size: 1.5rem;
+        padding: 0 15px;
+    }
+    .spotlight-header .subtitle {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+    }
+    .spotlight-header .header-divider {
+        margin: 8px auto 0;
+        width: 35px;
+    }
+    .spotlight-panels {
+        height: 380px;
+    }
     .spotlight-panel {
-        height: 200px;
+        height: 360px;
     }
     .spotlight-panel img {
-        width: 200px;
+        width: 250px;
     }
-    .spotlight-focus-indicator::before, 
-    .spotlight-focus-indicator::after {
-        width: 2px;
+    .movie-title {
+        font-size: 1rem;
     }
-    .spotlight-focus-indicator::before {
-        height: 100svh;
+    .movie-year {
+        font-size: 0.75rem;
     }
-    .spotlight-focus-indicator::after {
-        height: 100svh;
-    }
-    
 }

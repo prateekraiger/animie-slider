@@ -7,9 +7,64 @@ const PANEL_WIDTH_COLLAPSED = 20;
 const PANEL_WIDTH_EXPANDED = 400;
 const PANEL_WIDTH_EXPANDED_MOBILE= 100;
 const PANEL_GAP = 5;
-const PANEL_COUNT_DESKTOP = 20;
-const PANEL_COUNT_MOBILE= 10;
 const BREAKPOINT_MOBILE = 1000;
+
+const MOVIES = [
+  {
+    "movie": "The Notebook",
+    "year": 2004,
+    "imdb_id": "tt0332280",
+    "poster_url": "https://img.omdbapi.com/?i=tt0332280&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "La La Land",
+    "year": 2016,
+    "imdb_id": "tt3783958",
+    "poster_url": "https://img.omdbapi.com/?i=tt3783958&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "500 Days of Summer",
+    "year": 2009,
+    "imdb_id": "tt1022603",
+    "poster_url": "https://img.omdbapi.com/?i=tt1022603&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "How to Lose a Guy in 10 Days",
+    "year": 2003,
+    "imdb_id": "tt0251127",
+    "poster_url": "https://img.omdbapi.com/?i=tt0251127&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "10 Things I Hate About You",
+    "year": 1999,
+    "imdb_id": "tt0147800",
+    "poster_url": "https://img.omdbapi.com/?i=tt0147800&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "Mamma Mia!",
+    "year": 2008,
+    "imdb_id": "tt0795421",
+    "poster_url": "https://img.omdbapi.com/?i=tt0795421&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "Legally Blonde",
+    "year": 2001,
+    "imdb_id": "tt0250494",
+    "poster_url": "https://img.omdbapi.com/?i=tt0250494&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "Mean Girls",
+    "year": 2004,
+    "imdb_id": "tt0377092",
+    "poster_url": "https://img.omdbapi.com/?i=tt0377092&apikey=trilogy&h=600"
+  },
+  {
+    "movie": "27 Dresses",
+    "year": 2008,
+    "imdb_id": "tt0988595",
+    "poster_url": "https://img.omdbapi.com/?i=tt0988595&apikey=trilogy&h=600"
+  }
+];
 
 export default function Spotlight() {
     const trackRef = useRef(null);
@@ -17,7 +72,7 @@ export default function Spotlight() {
     const [isMobile, setIsMobile] = useState(false);
     const [focusedPanel, setFocusedPanel] = useState(0);
    
-    const panelCount = isMobile ? PANEL_COUNT_MOBILE:PANEL_COUNT_DESKTOP;
+    const panelCount = isMobile ? 9 : 18;
     const expandedWidth = isMobile ? PANEL_WIDTH_EXPANDED_MOBILE:PANEL_WIDTH_EXPANDED;
 
     useEffect(() => {
@@ -32,6 +87,7 @@ export default function Spotlight() {
     useEffect(() => {
         setFocusedPanel(0);
     }, [panelCount]);
+
     const getPanelPosition = useCallback(
         (panelIndex) => {
             const totalTrackWidth =
@@ -57,27 +113,52 @@ export default function Spotlight() {
     const getFocusIndicatorPosition = useCallback(() => {
         return getPanelPosition(focusedPanel);
     }, [focusedPanel, getPanelPosition]);
-return (
-  <section className="spotlight">
-    <div className="spotlight-track" ref={trackRef}>
-      <div className="spotlight-panels">
-        <div
-          className="spotlight-focus-indicator"
-          style={getFocusIndicatorPosition()}
+
+    const activeMovie = MOVIES[focusedPanel % MOVIES.length];
+
+    return (
+      <section className="spotlight">
+        {/* Ambient Blurred Background of Focused Movie Poster */}
+        <div 
+          className="ambient-background"
+          style={{ backgroundImage: `url(${activeMovie?.poster_url})` }}
         />
-        {Array.from({ length: panelCount }, (_, i) => (
-          <div
-            key={`${isMobile ? "m" : "d"}-${i}`}
-            className="spotlight-panel"
-            style={getPanelPosition(i)}
-            onMouseEnter={!isMobile ? () => focusPanel(i) : undefined}
-            onClick={isMobile ? () => focusPanel(i) : undefined}
-          >
-            <img src={`/spotlight/spotlight-${(i % 10) + 1}.png`} />
+
+        {/* Watchlist Header */}
+        <header className="spotlight-header">
+          <span className="subtitle">Watchlist</span>
+          <h1 className="title">Movies I Wanna Watch with Pratik</h1>
+          <div className="header-divider"></div>
+        </header>
+
+        <div className="spotlight-track" ref={trackRef}>
+          <div className="spotlight-panels">
+            <div
+              className="spotlight-focus-indicator"
+              style={getFocusIndicatorPosition()}
+            />
+            {Array.from({ length: panelCount }, (_, i) => {
+              const movie = MOVIES[i % MOVIES.length];
+              const isFocused = i === focusedPanel;
+              return (
+                <div
+                  key={`${isMobile ? "m" : "d"}-${i}`}
+                  className={`spotlight-panel ${isFocused ? "focused" : ""}`}
+                  style={getPanelPosition(i)}
+                  onMouseEnter={!isMobile ? () => focusPanel(i) : undefined}
+                  onClick={isMobile ? () => focusPanel(i) : undefined}
+                >
+                  <img src={movie.poster_url} alt={movie.movie} />
+                  <div className={`spotlight-panel-title ${isFocused ? "visible" : ""}`}>
+                    <h3 className="movie-title">{movie.movie}</h3>
+                    <span className="movie-year">{movie.year}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
+        </div>
+      </section>
+    );
 }
+
