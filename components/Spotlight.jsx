@@ -136,7 +136,7 @@ export default function Spotlight() {
         {/* Watchlist Header */}
         <header className="spotlight-header">
           <span className="subtitle">Watchlist</span>
-          <h1 className="title">Movies I Wanna Watch with Pratik</h1>
+          <h1 className="title">Movies I Wanna Watch with Gauri</h1>
           <div className="header-divider"></div>
         </header>
 

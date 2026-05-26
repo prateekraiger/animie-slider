@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Movies I Wanna Watch with Pratik",
+  title: "Movies I Wanna Watch with Gauri",
   description: "A beautifully curated watchlist of romantic and comedy films to watch together.",
 };
 
